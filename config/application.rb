@@ -13,7 +13,7 @@ require "action_mailer/railtie"
 require "action_view/railtie"
 require "action_cable/engine"
 # require "sprockets/railtie"
-require "rails/test_unit/railtie"
+#### require "rails/test_unit/railtie"
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -35,7 +35,7 @@ module MongodbRails
     config.api_only = true
 
     ### mongodb settings
-    config.mongoid.logger = Logger.new(STDERR, :warn)
+    ### config.mongoid.logger = Logger.new(STDERR, :warn)
     config.mongoid.preload_models = false
   end
 end
