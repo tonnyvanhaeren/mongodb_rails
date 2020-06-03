@@ -20,7 +20,7 @@ require 'rspec/rails'
 # directory. Alternatively, in the individual `*_spec.rb` files, manually
 # require only the support files necessary.
 #
-# Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
+Dir[Rails.root.join('spec', 'support', '**', '*.rb')].sort.each { |f| require f }
 
 RSpec.configure do |config|
   # Remove this line to enable support for ActiveRecord
@@ -30,7 +30,7 @@ RSpec.configure do |config|
   config.include FactoryBot::Syntax::Methods
 
   #include automatic the Json Api Helper class
-  ####config.include JsonApiHelpers
+  config.include JsonApiHelpers
 
   # If you enable ActiveRecord support you should unncomment these lines,
   # note if you'd prefer not to run each example within a transaction, you

@@ -3,12 +3,15 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  ## //TODO
+  ## field :_id, type: String, default: ->{ name }
+
   field :email, type: String
   field :encrypted_password, type: String
   field :firstName, type: String
   field :lastName, type: String
-  field :is_email_verified, type: Mongoid::Boolean
-  field :is_accepted, type: Mongoid::Boolean
+  field :is_email_verified, type: Mongoid::Boolean, default: false
+  field :is_accepted, type: Mongoid::Boolean, default: false
 
   index({email: 1}, {unique: true, name: 'unique_email_index'})
 
@@ -19,7 +22,15 @@ class User
   validates :email, uniqueness: { case_sensitive: false, message: 'Email is already in use' }
   validates :email, email_format: { message: 'Invalid email format' }    
 
-  ### before_create :hash_password
+  ## return only email verified users
+  def self.email_verified
+    where(is_email_verified: true)
+  end
+
+  ## return only accepted users
+  def self.accepted
+    where(is_accepted: true)
+  end
 
   def password
     @password ||= Password.new(encrypted_password) if encrypted_password.present?
