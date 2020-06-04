@@ -10,12 +10,33 @@ class UsersController < ApplicationController
       .limit(per_page)
       .order_by(lastName: :asc)
 
-    ### render json: users
     render json: users, status: :ok
   end
 
+  def show
+    user = User.find(params[:id])
+    render json: user
+    # rescue Mongoid::Errors::DocumentNotFound in application controller
+    # rescue Mongoid::Errors::DocumentNotFound => e
+    #   not_found_error    
+  end
+
   def create
-    
+    user = User.new(registration_params)
+    user.save!
+
+    render json: user, status: :created
+  rescue Mongoid::Errors::Validations
+    render json: user, adapter: :json_api,
+    serializer: ErrorSerializer,
+    status: :unprocessable_entity
+  end
+
+  private
+
+  def registration_params
+    params.require(:data).require(:attributes).permit(:email, :firstName, :lastName, :password) || 
+      ActionController::Parameters.new
   end
 
 end
