@@ -25,7 +25,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
   gem 'bson_ext'
 
   gem 'active_model_serializers'
-  gem 'kaminari' ###pagination
+  ### gem 'kaminari' ###pagination
   gem 'bcrypt'
   gem 'validates_email_format_of'
 #######################################

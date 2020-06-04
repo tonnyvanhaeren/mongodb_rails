@@ -14,6 +14,8 @@ class User
   field :is_accepted, type: Mongoid::Boolean, default: false
 
   index({email: 1}, {unique: true, name: 'unique_email_index'})
+  index({lastName: 1}, { name: 'lastName_index_desc'})
+  index({lastName: -1}, { name: 'lastName_index_asc'})
 
   validates :email, :firstName, :lastName, :password, presence: true
   validates :firstName, length: { in: 2..50 }

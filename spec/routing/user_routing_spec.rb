@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'users routes' do
+describe 'Users routes' do
   it 'should route to users index' do
     expect(:get => '/users').to route_to('users#index')
   end

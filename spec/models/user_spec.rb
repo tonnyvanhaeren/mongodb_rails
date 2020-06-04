@@ -66,6 +66,32 @@ RSpec.describe User, type: :model do
     end   
   end
 
+  describe '#scopes' do
+    after { described_class.delete_all }
+
+    let(:andries) {{ is_email_verified: true, is_accepted: true, lastName: 'Andries' }}
+    let(:bonapart) {{ is_email_verified: false, is_accepted: false, lastName: 'Bonapart' }}
+
+    subject {
+      create :user, andries
+      create :user, bonapart
+    }
+
+    it 'should only return email verified users' do
+      subject
+      expect(described_class.email_verified.count).to be(1)
+      expect(described_class.email_verified.first.lastName).to eq(andries[:lastName])
+      expect(described_class.email_verified.first.lastName).not_to eq(bonapart[:lastName])
+    end
+
+    it 'should only return accepted users' do
+      subject
+      expect(described_class.accepted.count).to be(1)
+      expect(described_class.accepted.first.lastName).to eq(andries[:lastName])
+      expect(described_class.accepted.first.lastName).not_to eq(bonapart[:lastName])      
+    end
+  end
+
   describe '#authenticate' do
     it 'should check valid password' do
       user = build :user , password: '1Telindus'

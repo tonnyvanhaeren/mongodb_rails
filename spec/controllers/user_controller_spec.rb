@@ -33,22 +33,19 @@ describe UsersController do
       end
     end
 
-    it 'should only return email verified users' do
-      user_un_verified = create :user, is_email_verified: false
-      user_verified = create :user, is_email_verified: true
-      expect(User.email_verified.count).to be(1)
+    it 'should order by lastName && paginate users if pagination params are provided' do
+      user1 = create :user, lastName: 'Andries'
+      user2 = create :user, lastName: 'Bonapart'
+      user3 = create :user, lastName: 'Covits'
 
-      user_verified = create :user, is_email_verified: true
-      expect(User.email_verified.count).to be(2)
-    end
-
-    it 'should only return accepted users' do
-      user_un_verified = create :user, is_accepted: false
-      user_verified = create :user, is_accepted: true
-      expect(User.accepted.count).to be(1)
-
-      user_verified = create :user, is_accepted: true
-      expect(User.accepted.count).to be(2)
+      subject
+      expect(json_data.length).to eq 3
+      expect(json_data.first['attributes']['last-name']).to eq(user1.lastName)
+      expect(json_data.last['attributes']['last-name']).to eq(user3.lastName)
+      
+      get :index, params: { page: 2, per_page: 1 } ## page: from 0,1,2 -> third item
+      expect(json_data.length).to eq 1
+      expect(json_data.first['attributes']['last-name']).to eq(user3.lastName)
     end
   end
 end
