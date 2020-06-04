@@ -11,9 +11,11 @@ Things you may want to cover:
 
 * Configuration
 
-* Database creation
+* Database creation 
 
 * Database initialization
+  - mongodb server
+  - gem mongoid
 
 * How to run the test suite
 
