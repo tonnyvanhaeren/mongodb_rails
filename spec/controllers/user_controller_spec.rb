@@ -27,7 +27,9 @@ describe UsersController do
             "last-name" => user.lastName,
             "is-accepted" => user.is_accepted,
             "full-name" => "antonius - vanhaeren",
-            "is-email-verified" => user.is_email_verified
+            "is-email-verified" => user.is_email_verified,
+            "created-at" => user.created_at.to_i,
+            "updated-at" => user.updated_at.to_i
           }
         })
       end
@@ -67,7 +69,9 @@ describe UsersController do
         "last-name" => user.lastName,
         "is-accepted" => user.is_accepted,
         "full-name" => "antonius - vanhaeren",
-        "is-email-verified" => user.is_email_verified
+        "is-email-verified" => user.is_email_verified,
+        "created-at" => user.created_at.to_i,
+        "updated-at" => user.updated_at.to_i
       })
     end
 
