@@ -15,6 +15,8 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
+
+    MyMailer.with(user: @user).welcome_email.deliver_later
     render json: user
     # rescue Mongoid::Errors::DocumentNotFound in application controller
     # rescue Mongoid::Errors::DocumentNotFound => e

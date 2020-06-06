@@ -23,6 +23,9 @@
 # Ignore master key for decrypting credentials and more.
 /config/master.key
 
+# own settings
 uitleg.txt
 /docker
 /config/mongoid.yml
+sendgrid.env
+

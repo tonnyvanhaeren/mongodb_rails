@@ -28,6 +28,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
   ### gem 'kaminari' ###pagination
   gem 'bcrypt'
   gem 'validates_email_format_of'
+  gem 'sendgrid-ruby'
 #######################################
 
 group :development, :test do
