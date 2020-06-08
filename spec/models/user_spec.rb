@@ -106,4 +106,25 @@ RSpec.describe User, type: :model do
     end
 
   end
+
+  describe 'Email confirmation token' do
+    after { described_class.delete_all }
+
+    it 'should automatic set the token when created' do
+      user = create :user , password: '1Telindus'
+      expect(user.email_confirm_token).not_to be_nil      
+    end
+
+    it 'should set the is_email_verified to true and clear the token' do
+      user = create :user , password: '1Telindus'
+
+      ##before method
+      expect(user.is_email_verified).to be_falsey
+      expect(user.email_confirm_token).not_to be_nil
+
+      user.email_confirmation_ok
+      expect(user.is_email_verified).to be_truthy
+      expect(user.email_confirm_token).to be_nil
+    end
+  end
 end

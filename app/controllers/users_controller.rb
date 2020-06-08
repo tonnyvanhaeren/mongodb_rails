@@ -16,11 +16,13 @@ class UsersController < ApplicationController
   def show
     user = User.find(params[:id])
 
-    MyMailer.with(user: @user).welcome_email.deliver_later
+    ## MyMailer.welcome_email.deliver_later
+    ##MyMailer.with(user: @user).sendgrid.deliver_later
+
     render json: user
     # rescue Mongoid::Errors::DocumentNotFound in application controller
     # rescue Mongoid::Errors::DocumentNotFound => e
-    #   not_found_error    
+    # not_found_error    
   end
 
   def create
@@ -33,6 +35,41 @@ class UsersController < ApplicationController
     serializer: ErrorSerializer,
     status: :unprocessable_entity
   end
+
+  # def confirm_email
+  #   token = params[:token]
+
+  #   if token == ''
+  #     pp 'token'
+  #     error = {
+  #       "code" =>   "404",
+  #       "title" =>  "Token invalid",
+  #       "detail" => "Token is empty"
+  #     }
+
+  #     render json: { "errors": [ error ] }, status: :not_found   
+  #   end
+
+
+  #   pp 'hallo'
+
+  #   user = User.where(email_confirm_token: token).first
+
+  #   if user
+  #     ## if user not found throw error see application controller
+  #     user.email_confirmation_ok
+  #     ## send mail ok
+  #     render json: user, status: :ok
+  #   elsif
+  #     error = {
+  #       "code" =>   "404",
+  #       "title" =>  "user with token : #{params[:token]} not found",
+  #       "detail" => "user token not correct check"
+  #     }
+
+  #     render json: { "errors": [ error ] }, status: :not_found      
+  #   end
+  # end
 
   private
 

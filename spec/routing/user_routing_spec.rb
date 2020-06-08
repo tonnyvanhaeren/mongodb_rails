@@ -15,10 +15,16 @@ describe 'Users routes' do
       to route_to(:controller => "users", :action => "show", :id => '1')
   end
 
-  it 'should toute to users create' do
+  it 'should route to users create' do
     expect(:post => '/users').to route_to('users#create')
     expect(post("/users")).
       to route_to(:controller => "users", :action => "create")
+  end
+
+  it 'should route to auth confirm_email' do
+    expect(:get => '/auth/confirm_email/token').to route_to('auth#confirm_email', token: 'token')
+    expect(get("/auth/confirm_email/token")).
+      to route_to(:controller => "auth", :action => "confirm_email", :token => 'token')
   end
   
 end

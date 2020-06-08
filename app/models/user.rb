@@ -3,6 +3,8 @@ class User
   include Mongoid::Document
   include Mongoid::Timestamps
 
+  before_create :confirmation_token
+
   ## //TODO
   ## field :_id, type: String, default: ->{ name }
 
@@ -12,6 +14,7 @@ class User
   field :lastName, type: String
   field :is_email_verified, type: Mongoid::Boolean, default: false
   field :is_accepted, type: Mongoid::Boolean, default: false
+  field :email_confirm_token, type: String
 
   index({email: 1}, {unique: true, name: 'unique_email_index'})
   index({lastName: 1}, { name: 'lastName_index_desc'})
@@ -48,7 +51,13 @@ class User
     if Password.new(self.encrypted_password) == plaintxt_pass
       true
     end
- end
+  end
+
+  def email_confirmation_ok
+    self.is_email_verified = true
+    self.email_confirm_token = nil
+    save!(:validate => false)
+  end
 
   private 
 
@@ -57,4 +66,9 @@ class User
     self.encrypted_password = @password
   end
 
+  def confirmation_token
+    if self.email_confirm_token.blank?
+        self.email_confirm_token = SecureRandom.urlsafe_base64.to_s
+    end
+  end
 end
