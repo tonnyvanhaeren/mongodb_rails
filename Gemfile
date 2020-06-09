@@ -21,7 +21,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 # gem 'rack-cors'
 
 #######################################
-  gem 'mongoid', '~> 7.0.5'
+  gem 'mongoid', '~> 7.1.0'
   gem 'bson_ext'
 
   gem 'active_model_serializers'
@@ -29,6 +29,9 @@ gem 'bootsnap', '>= 1.4.2', require: false
   gem 'bcrypt'
   gem 'validates_email_format_of'
   gem 'sendgrid-ruby'
+  ## enum fot mongoid
+  gem 'enumerize', :git => 'https://github.com/brainspec/enumerize'
+  
 #######################################
 
 group :development, :test do

@@ -2,8 +2,9 @@ class User
   include BCrypt
   include Mongoid::Document
   include Mongoid::Timestamps
+  extend Enumerize
 
-  before_create :confirmation_token
+  before_create :create_confirmation_token
 
   ## //TODO
   ## field :_id, type: String, default: ->{ name }
@@ -15,6 +16,8 @@ class User
   field :is_email_verified, type: Mongoid::Boolean, default: false
   field :is_accepted, type: Mongoid::Boolean, default: false
   field :email_confirm_token, type: String
+  field :role
+  enumerize :role, in: [:user, :admin], default: :user
 
   index({email: 1}, {unique: true, name: 'unique_email_index'})
   index({lastName: 1}, { name: 'lastName_index_desc'})
@@ -66,7 +69,7 @@ class User
     self.encrypted_password = @password
   end
 
-  def confirmation_token
+  def create_confirmation_token
     if self.email_confirm_token.blank?
         self.email_confirm_token = SecureRandom.urlsafe_base64.to_s
     end
