@@ -6,7 +6,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     let(:mail) { UserNotifierMailer.send_signup_email(user) }
 
     it "renders the headers" do
-      expect(mail.subject).to eq("Thanks for signing up for our amazing app")
+      expect(mail.subject).to eq("Thanks for signing up")
       expect(mail.to).to eq(["antonius.vanhaeren@telenet.be"])
       expect(mail.from).to eq(["tonny.development@telenet.be"])
     end

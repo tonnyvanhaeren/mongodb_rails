@@ -16,6 +16,7 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
+    
     render json: user
     # rescue Mongoid::Errors::DocumentNotFound in application controller
     # rescue Mongoid::Errors::DocumentNotFound => e

@@ -6,13 +6,9 @@ class AuthController < ApplicationController
     user.save!
 
     ## TODO send confirmation email
-    
-    # Deliver the signup email
     UserNotifierMailer.with(user: user).send_signup_email.deliver_now
-
     ## UserMailer.with(user: user).weekly_summary.deliver_now
     ## pp absolute_url_for(action: 'confirm_email', controller: 'auth', token: user.email_confirm_token)
-
     render json: user, status: :created
   rescue Mongoid::Errors::Validations
     render json: user, adapter: :json_api,

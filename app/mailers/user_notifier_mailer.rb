@@ -8,6 +8,6 @@ class UserNotifierMailer < ApplicationMailer
     # :subject => 'Thanks for signing up for our amazing app' )
 
     mail( :to => 'antonius.vanhaeren@telenet.be',
-      :subject => 'Thanks for signing up for our amazing app' )
+      :subject => 'Thanks for signing up' )
   end
 end

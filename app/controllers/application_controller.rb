@@ -1,7 +1,9 @@
 class ApplicationController < ActionController::API
-
   rescue_from Mongo::Error::NoServerAvailable, with: :mongodb_server_offline
-  rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found_error
+  rescue_from Mongoid::Errors::DocumentNotFound, with: :not_found_error  
+
+  before_action :make_action_mailer_use_request_host_and_protocol
+
 
   def mongodb_server_offline
     error = {
@@ -29,5 +31,12 @@ class ApplicationController < ActionController::API
     
   def absolute_url_for(options = {})
     url_for(options.merge(Rails.configuration.x.absolute_url_options || {}))
+  end
+  
+  private
+
+  def make_action_mailer_use_request_host_and_protocol
+    ActionMailer::Base.default_url_options[:protocol] = request.protocol
+    ActionMailer::Base.default_url_options[:host] = request.host_with_port
   end
 end
