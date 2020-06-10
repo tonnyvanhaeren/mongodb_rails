@@ -23,4 +23,11 @@ class ApplicationController < ActionController::API
 
     render json: { "errors": [ error ] }, status: :not_found
   end
+
+  ## helper methode for getting the absolute path
+  ## absolute_url_for(action: 'confirm_email', controller: 'auth', token: user.email_confirm_token)
+    
+  def absolute_url_for(options = {})
+    url_for(options.merge(Rails.configuration.x.absolute_url_options || {}))
+  end
 end

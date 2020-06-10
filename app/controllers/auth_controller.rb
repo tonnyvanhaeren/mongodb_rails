@@ -1,6 +1,25 @@
 class AuthController < ApplicationController
   ## skip_before_action :authorize!, only: :create
 
+  def signup
+    user = User.new(registration_params)
+    user.save!
+
+    ## TODO send confirmation email
+    
+    # Deliver the signup email
+    UserNotifierMailer.with(user: user).send_signup_email.deliver_now
+
+    ## UserMailer.with(user: user).weekly_summary.deliver_now
+    ## pp absolute_url_for(action: 'confirm_email', controller: 'auth', token: user.email_confirm_token)
+
+    render json: user, status: :created
+  rescue Mongoid::Errors::Validations
+    render json: user, adapter: :json_api,
+    serializer: ErrorSerializer,
+    status: :unprocessable_entity
+  end
+
   def confirm_email
     token = params[:token]
     user = User.where(email_confirm_token: token).first
@@ -21,16 +40,7 @@ class AuthController < ApplicationController
     end
   end
 
-  def signup
-    user = User.new(registration_params)
-    user.save!
 
-    render json: user, status: :created
-  rescue Mongoid::Errors::Validations
-    render json: user, adapter: :json_api,
-    serializer: ErrorSerializer,
-    status: :unprocessable_entity
-  end
 
   private
 

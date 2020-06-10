@@ -28,6 +28,7 @@ describe UsersController do
             "is-accepted" => user.is_accepted,
             "full-name" => "antonius - vanhaeren",
             "is-email-verified" => user.is_email_verified,
+            "role" => "user",
             "created-at" => user.created_at.to_i,
             "updated-at" => user.updated_at.to_i
           }
@@ -70,6 +71,7 @@ describe UsersController do
         "is-accepted" => user.is_accepted,
         "full-name" => "antonius - vanhaeren",
         "is-email-verified" => user.is_email_verified,
+        "role" => "user",
         "created-at" => user.created_at.to_i,
         "updated-at" => user.updated_at.to_i
       })
@@ -88,83 +90,5 @@ describe UsersController do
 
   end
 
-  describe '#create' do 
-    subject { post :create, params: params }  
 
-    context 'with invalid params provided' do
-      let(:params) do
-        {
-          data: {
-            attributes: {
-              email: nil,
-              firstName: nil,
-              lastName: nil,
-              password: nil
-            }
-          }
-        }
-      end
-
-      it 'should return 422 status code ' do
-        subject
-        expect(response).to have_http_status(:unprocessable_entity)
-      end
-
-      it 'should not create a new user' do
-        expect{ subject }.not_to change { User.count }
-      end
-
-      it 'should return error messages in response body' do
-        subject
-        expect(json['errors']).to include(
-          {
-            "source" => { "pointer" => "/data/attributes/email" },
-            "detail" =>  "can't be blank"
-          },
-          {
-            "source" => { "pointer" => "/data/attributes/first-name" },
-            "detail" =>  "can't be blank"
-          },
-          {
-            "source" => { "pointer" => "/data/attributes/last-name" },
-            "detail" =>  "can't be blank"
-          },                    
-          {
-            "source" => { "pointer" => "/data/attributes/password" },
-            "detail" =>  "can't be blank"
-          }
-        )
-      end
-    end
-
-    context 'with valid params provided' do
-      before { User.delete_all } ### clean database
-      let(:params) do
-        {
-          data: {
-            attributes: {
-              email: 'test@test.com',
-              firstName: "Antonius",
-              lastName: "Vanhaeren",
-              password: "password"
-            }
-          }
-        }
-      end
-
-      it 'should return 201 status code' do
-        subject
-        expect(response).to have_http_status(:created)
-      end
-      
-      it 'should create a user' do
-        ## Band.where(name: "Photek").exists?
-        expect(User.where(email: 'test@test.com').exists?).to be_falsey
-
-        expect{ subject }.to change { User.count }.by(1)
-        expect(User.where(email: 'test@test.com').exists?).to be_truthy
-      end      
-    end
-
-  end
 end

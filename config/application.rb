@@ -37,5 +37,12 @@ module MongodbRails
     ### mongodb settings
     ### config.mongoid.logger = Logger.new(STDERR, :warn)
     config.mongoid.preload_models = false
+
+    ###
+    ###
+    ## TODO set local variables
+    config.x.absolute_url_options = { host: 'localhost', protocol: 'http', port: '3000' }
+    config.action_mailer.default_url_options = config.x.absolute_url_options
+
   end
 end

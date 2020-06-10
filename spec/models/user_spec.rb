@@ -127,4 +127,27 @@ RSpec.describe User, type: :model do
       expect(user.email_confirm_token).to be_nil
     end
   end
+
+  describe 'enumeration' do
+    after { described_class.delete_all }
+
+    it { should enumerize(:role) }
+    it { should enumerize(:role).in(:user, :admin).with_default(:user) }
+
+    it 'should set the role enum as default to :user' do
+      user = create :user , password: '1Telindus'
+      expect(user.role.user?).to be_truthy
+      expect(user.role.admin?).to be_falsey
+    end
+
+    it 'should set the role enum to :admin' do
+      user = create :user , password: '1Telindus'
+      expect(user.role.user?).to be_truthy
+      expect(user.role.admin?).to be_falsey
+
+      user.role = :admin
+      expect(user.role.admin?).to be_truthy
+    end
+
+  end
 end

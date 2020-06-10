@@ -6,9 +6,6 @@ class User
 
   before_create :create_confirmation_token
 
-  ## //TODO
-  ## field :_id, type: String, default: ->{ name }
-
   field :email, type: String
   field :encrypted_password, type: String
   field :firstName, type: String

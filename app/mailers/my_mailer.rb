@@ -41,7 +41,7 @@ class MyMailer < ActionMailer::Base
           "dynamic_template_data": {
             "firstName": "Jef",
             "lastName": "Vanhaeren",
-            "confirmation_url": "http://localhost:3000/email_confirmation/opopopopopopopop"
+            "confirmation_url": "http://localhost:3000/auth/confirm_email/TOKEN"
           },
           "subject": "Hello, World!"
         }
