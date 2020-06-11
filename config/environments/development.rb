@@ -33,6 +33,7 @@ Rails.application.configure do
     address:              'smtp.sendgrid.net',
     port:                 587,
     domain:               'http://localhost:3000',
+    ## TODO send get automatic root url
     user_name:            Rails.application.credentials.mail[:user_name],
     password:             Rails.application.credentials.mail[:password],
     authentication:       'plain',

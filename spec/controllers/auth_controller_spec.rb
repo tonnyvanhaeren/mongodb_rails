@@ -76,7 +76,11 @@ describe AuthController do
 
         expect{ subject }.to change { User.count }.by(1)
         expect(User.where(email: 'test@test.com').exists?).to be_truthy
-      end      
+      end
+
+      it 'should send a email confirmation' do
+        expect{ subject }.to change { ActionMailer::Base.deliveries.count }.by(1)
+      end
     end
   end
 

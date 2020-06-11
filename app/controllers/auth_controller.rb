@@ -5,7 +5,7 @@ class AuthController < ApplicationController
     user = User.new(registration_params)
     user.save!
 
-    ## TODO send confirmation email
+
     UserNotifierMailer.with(user: user).send_signup_email.deliver_now
     ## UserMailer.with(user: user).weekly_summary.deliver_now
     ## pp absolute_url_for(action: 'confirm_email', controller: 'auth', token: user.email_confirm_token)
@@ -23,6 +23,7 @@ class AuthController < ApplicationController
     if user
       user.email_confirmation_ok
       ## send mail ok
+      ## TODO send confirmation received email
       render json: user, status: :ok
     elsif
       ### send email not ok

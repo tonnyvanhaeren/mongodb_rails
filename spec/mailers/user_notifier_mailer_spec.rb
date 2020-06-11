@@ -2,8 +2,10 @@ require "rails_helper"
 
 RSpec.describe UserNotifierMailer, type: :mailer do
   describe "send_signup_email" do
-    let(:user) { build :user, email: 'antonius.vanhaeren@telenet.be' }
-    let(:mail) { UserNotifierMailer.send_signup_email(user) }
+    after { User.delete_all }
+
+    let(:user) { create :user, email: 'antonius.vanhaeren@telenet.be' }
+    let(:mail) { UserNotifierMailer.with(user: user).send_signup_email.deliver_now }
 
     it "renders the headers" do
       expect(mail.subject).to eq("Thanks for signing up")

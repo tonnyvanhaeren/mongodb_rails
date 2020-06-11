@@ -18,6 +18,7 @@ require "action_cable/engine"
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
+Dotenv::Railtie.load
 
 module MongodbRails
   class Application < Rails::Application
@@ -39,9 +40,8 @@ module MongodbRails
     config.mongoid.preload_models = false
 
     ###
-    ###
-    ## TODO set local variables
-    config.x.absolute_url_options = { host: 'localhost', protocol: 'http', port: '3000' }
+    ##config.x.absolute_url_options = { host: 'localhost', protocol: 'http', port: '3000' }
+    config.x.absolute_url_options = { host: ENV['HOST'], protocol: ENV['PROTOCOL'], port: ENV['PORT'] }
     config.action_mailer.default_url_options = config.x.absolute_url_options
 
   end

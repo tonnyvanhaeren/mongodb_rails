@@ -28,4 +28,5 @@ uitleg.txt
 /docker
 /config/mongoid.yml
 sendgrid.env
+.env
 
