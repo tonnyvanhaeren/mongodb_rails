@@ -16,11 +16,9 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
-
-    pp Rails.configuration.x.absolute_url_options
-    url = url_for(root_path)
-    pp url
-
+    ##url_for controller: 'tasks', action: 'testing', host: 'somehost.org', port: '8080'
+    ##pp ENV['DOMAIN']
+    ## UserNotifierMailer.with(user: user).send_signup_email.deliver_now
     render json: user
     # rescue Mongoid::Errors::DocumentNotFound in application controller
     # rescue Mongoid::Errors::DocumentNotFound => e

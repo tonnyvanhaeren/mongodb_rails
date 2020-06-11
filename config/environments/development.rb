@@ -32,13 +32,15 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:              'smtp.sendgrid.net',
     port:                 587,
-    domain:               'http://localhost:3000',
+    domain:               ENV['DOMAIN'],
     ## TODO send get automatic root url
     user_name:            Rails.application.credentials.mail[:user_name],
     password:             Rails.application.credentials.mail[:password],
     authentication:       'plain',
     enable_starttls_auto: true 
   }
+
+  config.action_mailer.default_url_options = { host: ENV['HOST'], protocol: ENV['PROTOCOL'], port: ENV['PORT'] }
 
   # Raises error for missing translations.
   # config.action_view.raise_on_missing_translations = true
