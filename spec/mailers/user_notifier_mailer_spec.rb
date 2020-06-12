@@ -20,6 +20,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     it "renders the body" do
       expect(mail.body.encoded).to match("Thanks for signing up")
 
+      # styles not included 
       # <form class="button_to" method="post"
       #     action="http://localhost:4000/auth/confirm_email/9vdNKsNS32hp9oMzJ50PIw">
       #     type="submit" value="Confirm your email"

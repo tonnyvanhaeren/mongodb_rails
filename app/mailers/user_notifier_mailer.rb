@@ -5,7 +5,7 @@ class UserNotifierMailer < ApplicationMailer
   def send_signup_email
     @user = params[:user]
 
-    mail( :to => 'antonius.vanhaeren@telenet.be',
+    mail( :to => @user.email,
       :subject => 'Thanks for signing up' )
   end
 end
