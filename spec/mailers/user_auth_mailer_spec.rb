@@ -1,14 +1,14 @@
 require "rails_helper"
 
-RSpec.describe UserNotifierMailer, type: :mailer do
+RSpec.describe UserAuthMailer, type: :mailer do
   describe "send_signup_email" do
     after { User.delete_all }
 
     let(:user) { create :user, email: 'antonius.vanhaeren@telenet.be' }
-    let(:mail) { UserNotifierMailer.with(user: user).send_signup_email.deliver_now }
+    let(:mail) { UserAuthMailer.with(user: user).send_signup_email.deliver_now }
 
     it "renders the headers" do
-      expect(mail.subject).to eq("Thanks for signing up")
+      expect(mail.subject).to eq("Verify email confirmation request")
       expect(mail.to).to eq(["antonius.vanhaeren@telenet.be"])
       expect(mail.from).to eq(["tonny.development@telenet.be"])
     end
@@ -18,7 +18,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
     end
 
     it "renders the body" do
-      expect(mail.body.encoded).to match("Thanks for signing up")
+      expect(mail.body.encoded).to match("Thank you to sign up")
 
       # styles not included 
       # <form class="button_to" method="post"
@@ -27,7 +27,7 @@ RSpec.describe UserNotifierMailer, type: :mailer do
       #   />
       # </form>
 
-      expect(mail.body.encoded).to match(action=auth_confirm_email_path_url(user.email_confirm_token))
+      expect(mail.body.encoded).to match(href=auth_confirm_email_path_url(user.email_confirm_token))
     end
 
 

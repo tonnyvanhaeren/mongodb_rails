@@ -16,6 +16,9 @@ class UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
+
+    UserAuthMailer.with(user: user).send_signup_email.deliver_now
+
     ##url_for controller: 'tasks', action: 'testing', host: 'somehost.org', port: '8080'
     ##pp ENV['DOMAIN']
     ## UserNotifierMailer.with(user: user).send_signup_email.deliver_now

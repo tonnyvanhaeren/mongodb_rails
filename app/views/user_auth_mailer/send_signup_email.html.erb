@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Thank you to sign up, <%= @user.firstName %> <%= @user.lastName %> </h1>
+    <p>
+      We have to verify your email, before we can permit access to the site.
+    </p>
+
+    <span>
+      <a href="<%= @url %>" 
+        class="#" 
+        style=" color:#FFFFFF; background-color:#548687;border:1px solid #548687;border-radius:4px;
+                color:#ffffff;display:inline-block;font-size:16px;font-weight:normal;padding:10px 10px 10px 10px;
+                text-align:center;text-decoration:none; margin-bottom:30px; margin-top:10px;">
+
+        <span style="line-height: 15px;
+          text-align:center;" class="txt-color">
+          Click here to confirm your email
+        </span>
+      </a>
+    </span>
+    
+    <p>Thanks!</p>
+  </body>
+</html>

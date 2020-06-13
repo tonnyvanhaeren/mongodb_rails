@@ -5,8 +5,8 @@ class AuthController < ApplicationController
     user = User.new(registration_params)
     user.save!
 
+    UserAuthMailer.with(user: user).send_signup_email.deliver_now
 
-    UserNotifierMailer.with(user: user).send_signup_email.deliver_now
     ## UserMailer.with(user: user).weekly_summary.deliver_now
     ## pp absolute_url_for(action: 'confirm_email', controller: 'auth', token: user.email_confirm_token)
     render json: user, status: :created
@@ -36,8 +36,6 @@ class AuthController < ApplicationController
       render json: { "errors": [ error ] }, status: :bad_request   
     end
   end
-
-
 
   private
 
