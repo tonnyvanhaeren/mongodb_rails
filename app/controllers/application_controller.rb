@@ -16,8 +16,8 @@ class ApplicationController < ActionController::API
   def not_found_error
     error = {
       "code" =>   "404",
-      "title" =>  "user with id : #{params[:id]} not found",
-      "detail" => "user id not correct check"
+      "title" =>  "document with id : #{params[:id]} not found",
+      "detail" => "document id is not correct => check it"
     }
 
     render json: { "errors": [ error ] }, status: :not_found

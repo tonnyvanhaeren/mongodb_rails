@@ -1,6 +1,5 @@
 class UserAuthMailer < ApplicationMailer
   layout 'mailer'
-
   default from: 'tonny.development@telenet.be'
 
   def send_signup_email
