@@ -34,6 +34,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
   gem 'sendgrid-ruby'
   ## enum fot mongoid
   gem 'enumerize', :git => 'https://github.com/brainspec/enumerize'
+  gem 'jwt'
   
 #######################################
 

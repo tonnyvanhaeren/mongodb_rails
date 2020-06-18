@@ -44,5 +44,6 @@ module MongodbRails
     ## config.x.absolute_url_options = { host: ENV['HOST'], protocol: ENV['PROTOCOL'], port: ENV['PORT'] }
     ## don't works here ??? config.action_mailer.default_url_options = { host: ENV['HOST'], protocol: ENV['PROTOCOL'], port: ENV['PORT'] }
     config.action_mailer.preview_path = "#{Rails.root}/spec/mailers/previews"
+    ## config.autoload_paths << Rails.root.join('lib')
   end
 end
