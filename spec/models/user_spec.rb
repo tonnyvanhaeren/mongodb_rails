@@ -1,69 +1,83 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
+  describe 'factory' do
+    subject { build :user, password: '1Telindus' }
+
+    it { is_expected.to be_valid }
+  end
+
   describe '#validation' do
+    let(:user) { build :user, password: nil }
 
-    it 'should test that the factory is valid' do
-      user = build :user, password: '1Telindus'
-      expect(user).to be_valid
+    context 'attribute password' do
+      it 'validate presence' do
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:password]).to include("can't be blank")
+      end
     end
 
-    it 'should validate presence of password' do
-      user = build :user, password: nil
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:password]).to include("can't be blank")
+    context 'attributes firsName - lastName' do
+      let(:user) { build :user, password: '1Telindus', firstName: nil, lastName: nil }  
+
+      it 'validate presence' do
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:firstName]).to include("can't be blank", "is too short (minimum is 2 characters)")
+        expect(user.errors.messages[:lastName]).to include("can't be blank", "is too short (minimum is 2 characters)")
+      end
     end
 
-    it 'should validate presence of attributes firstName, LastName' do
-      user = build :user, password: '1Telindus', firstName: nil, lastName: nil
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:firstName]).to include("can't be blank", "is too short (minimum is 2 characters)")
-      expect(user.errors.messages[:lastName]).to include("can't be blank", "is too short (minimum is 2 characters)")
+    context 'attributes firsName -lastName' do
+      let(:user) { build :user, password: '1Telindus',
+                                firstName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+                                lastName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' 
+      }  
+
+      it 'validate length < 50' do
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:firstName]).to include("is too long (maximum is 50 characters)")
+        expect(user.errors.messages[:lastName]).to include("is too long (maximum is 50 characters)")
+      end
     end
 
-    it 'should validate min length of attributes firstName, LastName' do
-      user = build :user, password: '1Telindus', firstName: 'a', lastName: 'a'
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:firstName]).to include("is too short (minimum is 2 characters)")
-      expect(user.errors.messages[:lastName]).to include("is too short (minimum is 2 characters)")
+    context 'attribute email' do
+      let(:user) { build :user, password: '1Telindus', email: nil }  
+
+      it 'validate presence' do
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:email]).to include("can't be blank")
+      end
     end
 
-    it 'should validate max length of attributes firstName, LastName' do
-      user = build :user, password: '1Telindus',
-        firstName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-        lastName: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:firstName]).to include("is too long (maximum is 50 characters)")
-      expect(user.errors.messages[:lastName]).to include("is too long (maximum is 50 characters)")
+    context 'attribute email' do
+      let(:user) { build :user, password: '1Telindus', email: 'opa@opa' }  
+
+      it 'validate email format' do
+        expect(user).not_to be_valid
+        expect(user.errors.messages[:email]).to include("Invalid email format")
+      end
     end
 
-    it 'should validate the precense of attribute email' do
-      user = build :user, password: '1Telindus', email: nil
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:email]).to include("can't be blank")
-    end
+    context 'attribute email' do
+      let(:user) { build :user, password: '1Telindus', email: 'opa@opa.be' }  
 
-    it 'should validate the format of invalid attribute email' do
-      user = build :user, password: '1Telindus', email: 'opa@opa'
-      expect(user).not_to be_valid
-      expect(user.errors.messages[:email]).to include("Invalid email format")
-    end
-
-    it 'should validate the format of valid attribute email' do
-      user = build :user, password: '1Telindus', email: 'opa@opa.be'
-      expect(user).to be_valid
-      ### expect(user.errors.messages[:email]).to include("Invalid email format")
+      it 'validate correct email format' do
+        expect(user).to be_valid
+      end
     end    
 
-    it 'should validate the uniqueness attribute email' do
-      user = create :user, password: '1Telindus', email: 'opa@opa.be'
-      invalid_user = build :user, password: '1Telindus', email: 'opa@opa.be'
-      expect(user).to be_valid
-      expect(invalid_user).not_to be_valid
-      expect(invalid_user.errors.messages[:email]).to include("Email is already in use")
-      ## clean up database
-      user.delete
-    end   
+    context 'attribute email' do
+      let(:user) { create :user, password: '1Telindus', email: 'opa@opa.be' }  
+      let(:user_with_same_email) { build :user, password: '1Telindus', email: 'opa@opa.be' }  
+
+      it 'validate the uniqueness' do
+        expect(user).to be_valid
+        expect(user_with_same_email).not_to be_valid
+        expect(user_with_same_email.errors.messages[:email]).to include("Email is already in use")
+        ## clean up database
+        user.delete
+      end
+    end  
   end
 
   describe '#scopes' do
@@ -93,29 +107,28 @@ RSpec.describe User, type: :model do
   end
 
   describe '#authenticate' do
-    it 'should check valid password' do
+    it 'with valid password' do
       user = build :user , password: '1Telindus'
       expect(user).to be_valid
       expect(user.authenticate('1Telindus')).to be_truthy
     end
 
-    it 'should check invalid password' do
+    it 'with invalid password' do
       user = build :user , password: '1Telindus'
       expect(user).to be_valid
       expect(user.authenticate('in-valid')).to be_falsey
     end
-
   end
 
   describe 'Email confirmation token' do
     after { described_class.delete_all }
 
-    it 'should automatic set the token when created' do
+    it 'automatic set the token when user is created' do
       user = create :user , password: '1Telindus'
       expect(user.email_confirm_token).not_to be_nil      
     end
 
-    it 'should set the is_email_verified to true and clear the token' do
+    it 'when method email_confirmation_ok is invoked' do
       user = create :user , password: '1Telindus'
 
       ##before method

@@ -48,8 +48,10 @@ class User
   end
 
   def authenticate(plaintxt_pass)
-    if Password.new(self.encrypted_password) == plaintxt_pass
+    if (Password.new(self.encrypted_password) == plaintxt_pass)
       true
+    elsif
+      false
     end
   end
 

@@ -37,6 +37,19 @@ class AuthController < ApplicationController
     end
   end
 
+  def login
+    email = params[:data][:attributes][:email]
+    password = params[:data][:attributes][:password]
+
+    raise AuthenticationError if (email.blank? || password.blank?) # check params
+    user = User.find_by(email: email ) # check exists
+    raise EmailConfirmationError if (!user.is_email_verified) # check email verification
+    raise AuthenticationError unless user.authenticate(password) # check eq password
+
+    render json: { jwt_token: 'token' }, status: :ok
+
+  end
+
   private
 
   def registration_params

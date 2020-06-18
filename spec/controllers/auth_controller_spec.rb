@@ -86,6 +86,161 @@ describe AuthController do
     end
   end
 
+  describe '#login' do
+    let(:andries) { create :user, email: 'bob.andries@telenet.be', lastName: 'Andries', password: '1Telindus' }
+    let(:bonapart) { create :user, email: 'bob.bonapart@telenet.be', lastName: 'Bonapart', password: '2Telindus' }
+
+    after(:context) do
+      User.delete_all 
+    end ### clean database  
+
+    subject { post :login, params: params }
+
+    context 'with empty params' do
+      after { User.delete_all } ### clean database
+
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              email: '',
+              password: ''
+            }
+          }
+        }
+      end
+
+      it 'return 401 unauthorized' do
+        subject
+        expect(response).to have_http_status(401)
+      end
+
+      it 'return authentication_error in  json format' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json['errors']).to include(
+          {
+            "code" =>   "401",
+            "title" =>  "Invalid login or password",
+            "detail" => "You must provide valid credentials in order to exchange them for a token"
+          }
+        )
+      end
+
+    end
+
+    context 'with unknow email' do
+      after { User.delete_all } ### clean database
+
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              email: 'unknow.email@gmail.com',
+              password: 'unknown'
+            }
+          }
+        }
+      end
+
+      it 'return 404 not found' do
+        subject
+        expect(response).to have_http_status(404)
+      end
+
+      it 'return authentication_error in  json format' do
+        subject
+        expect(response).to have_http_status(:not_found)
+        expect(json['errors']).to include(
+          {
+            "code" =>   "404",
+            "title" =>  "document with id : #{params[:id]} not found",
+            "detail" => "document id is not correct => check it"
+          }
+        )
+      end
+    end
+
+    context 'with known email but not verified' do
+      after { User.delete_all } ### clean database
+
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              email: andries.email,
+              password: andries.password
+            }
+          }
+        }
+      end
+
+      it 'return 401 unauthorized' do
+        subject
+        expect(response).to have_http_status(401)
+      end
+
+      it 'return email_confirmation_error in  json format' do
+        subject
+        expect(response).to have_http_status(:unauthorized)
+        expect(json['errors']).to include(
+          {
+            "code" =>   "401",
+            "title" =>  "email confirmation",
+            "detail" => "your email is not verified"
+          }
+        )
+      end
+    end
+
+    context 'with invalid password email verified' do
+      after { User.delete_all } ### clean database
+
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              email: bonapart.email,
+              password: 'invalid_password'
+            }
+          }
+        }
+      end
+
+      it 'return 401 unauthorized' do
+        # mock email verified
+        bonapart.email_confirmation_ok
+
+        subject
+        expect(response).to have_http_status(401)
+      end
+    end
+
+    context 'with valid credentials and email verified' do
+      after { User.delete_all } ### clean database
+
+      let(:params) do
+        {
+          data: {
+            attributes: {
+              email: bonapart.email,
+              password: '2Telindus'
+            }
+          }
+        }
+      end
+
+      it 'return 200 ok' do
+        # mock email verified
+        bonapart.email_confirmation_ok
+        
+        subject
+        expect(response).to have_http_status(200)
+      end
+
+    end
+  end
+
   describe '#confirm_email' do
     after(:context) { User.delete_all } ### clean database  
 

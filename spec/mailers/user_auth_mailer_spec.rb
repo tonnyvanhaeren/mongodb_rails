@@ -7,29 +7,38 @@ RSpec.describe UserAuthMailer, type: :mailer do
     let(:user) { create :user, email: 'antonius.vanhaeren@telenet.be' }
     let(:mail) { UserAuthMailer.with(user: user).send_signup_email.deliver_now }
 
-    it "renders the headers" do
-      expect(mail.subject).to eq("Verify email confirmation request")
-      expect(mail.to).to eq(["antonius.vanhaeren@telenet.be"])
-      expect(mail.from).to eq(["tonny.development@telenet.be"])
+    context 'mail headers' do
+      it "renders subject" do
+        expect(mail.subject).to eq("Verify email confirmation request")
+      end
+      it "renders mail to" do
+        expect(mail.to).to eq(["antonius.vanhaeren@telenet.be"])
+      end
+      it "renders mail from" do
+        expect(mail.from).to eq(["tonny.development@telenet.be"])
+      end
+
     end
 
-    it 'should have access to URL helpers' do
-      expect { auth_confirm_email_path_url(user.email_confirm_token) }.not_to raise_error
+    context 'url link' do
+      it 'should use URL helpers' do
+        expect { auth_confirm_email_path_url(user.email_confirm_token) }.not_to raise_error
+      end
+      it 'should contain host protocol and port' do
+        expect(auth_confirm_email_path_url(user.email_confirm_token)).to include(ENV['HOST'])
+        expect(auth_confirm_email_path_url(user.email_confirm_token)).to include(ENV['PROTOCOL'])
+        expect(auth_confirm_email_path_url(user.email_confirm_token)).to include(ENV['PORT'])
+      end
     end
 
-    it "renders the body" do
-      expect(mail.body.encoded).to match("Thank you to sign up")
+    context 'mail body includes' do
+      it "title" do
+        expect(mail.body.encoded).to match("Thank you to sign up")
+      end
 
-      # styles not included 
-      # <form class="button_to" method="post"
-      #     action="http://localhost:4000/auth/confirm_email/9vdNKsNS32hp9oMzJ50PIw">
-      #     type="submit" value="Confirm your email"
-      #   />
-      # </form>
-
-      expect(mail.body.encoded).to match(href=auth_confirm_email_path_url(user.email_confirm_token))
+      it "url link to email confirmation path" do
+        expect(mail.body.encoded).to match(href=auth_confirm_email_path_url(user.email_confirm_token))
+      end
     end
-
-
   end
 end
