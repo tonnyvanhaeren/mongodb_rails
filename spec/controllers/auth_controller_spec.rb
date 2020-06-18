@@ -238,6 +238,15 @@ describe AuthController do
         expect(response).to have_http_status(200)
       end
 
+      it 'shoud return proper json' do
+        # mock email verified
+        bonapart.email_confirmation_ok
+        
+        subject
+        expect(response.content_type).to eq "application/json; charset=utf-8"
+        expect(JSON.parse(response.body)).to include("jwt_token")
+      end
+
     end
   end
 

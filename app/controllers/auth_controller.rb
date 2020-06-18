@@ -45,9 +45,9 @@ class AuthController < ApplicationController
     user = User.find_by(email: email ) # check exists
     raise EmailConfirmationError if (!user.is_email_verified) # check email verification
     raise AuthenticationError unless user.authenticate(password) # check eq password
-
-    render json: { jwt_token: 'token' }, status: :ok
-
+    
+    jwt_token = JsonWebToken.encode(id: user._id, email: user.email, role: user.role )
+    render json: { jwt_token: jwt_token }, status: :ok
   end
 
   private
